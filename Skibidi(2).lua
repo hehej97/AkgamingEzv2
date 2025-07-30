@@ -1,4 +1,3 @@
--- 📌 Khởi tạo các dịch vụ cần thiết
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 local playerName = player.Name
@@ -9,13 +8,15 @@ local VirtualInputManager = game:GetService("VirtualInputManager")
 -- 🗓️ Hiển thị thông báo người dùng
 local date = os.date("*t")
 local formattedDate = string.format("%02d/%02d/%04d", date.day, date.month, date.year)
-StarterGui:SetCore("SendNotification", {
-    Title = "Thông Tin Người Dùng",
-    Text = "Tên: " .. playerName .. "\nNgày: " .. formattedDate,
-    Duration = 10
-})
+pcall(function()
+    StarterGui:SetCore("SendNotification", {
+        Title = "Thông Tin Người Dùng",
+        Text = "Tên: " .. playerName .. "\nNgày: " .. formattedDate,
+        Duration = 10
+    })
+end)
 
--- 🖼️ Nút hình ảnh UI nhỏ góc màn hình
+-- 📌 Nút góc màn hình với ảnh
 do
     local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
     ScreenGui.Name = "AkGamingHubBtn"
@@ -43,7 +44,7 @@ do
     TextButton.BackgroundTransparency = 1
     TextButton.Text = ""
 
-    -- 💥 Hiệu ứng nhấn
+    -- 👆 Hiệu ứng nhấn
     local zoomedIn = false
     local originalSize = UDim2.new(0, 40, 0, 40)
     local zoomedSize = UDim2.new(0, 30, 0, 30)
@@ -53,8 +54,27 @@ do
         local targetSize = zoomedIn and originalSize or zoomedSize
         TweenService:Create(ImageLabel, tweenInfo, {Size = targetSize}):Play()
         zoomedIn = not zoomedIn
-        VirtualInputManager:SendKeyEvent(true, "LeftControl", false, game)
+
+        -- ⚠️ Một số executor có thể không hỗ trợ VirtualInputManager
+        pcall(function()
+            VirtualInputManager:SendKeyEvent(true, "LeftControl", false, game)
+        end)
     end)
+end
+
+-- 🧠 Tải Fluent UI
+local Fluent = nil
+pcall(function()
+    Fluent = loadstring(game:HttpGet("https://raw.githubusercontent.com/LongHip2012/FluentRemake/main/release.lua.txt"))()
+end)
+
+if not Fluent then
+    StarterGui:SetCore("SendNotification", {
+        Title = "Fluent UI Error",
+        Text = "Không thể tải Fluent UI. Hãy kiểm tra kết nối mạng hoặc thử lại.",
+        Duration = 15
+    })
+    return
 end
 
 -- 🧠 Tải Fluent UI
