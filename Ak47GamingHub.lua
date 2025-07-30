@@ -1,157 +1,79 @@
-local Players = game:GetService("Players")
-local player = Players.LocalPlayer
-
-task.wait(1)
-
--- UI Library
-local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "AkGamingEzUI"
-ScreenGui.ResetOnSpawn = false
-ScreenGui.Parent = player:WaitForChild("PlayerGui")
-
-local mainFrame = Instance.new("Frame", ScreenGui)
-mainFrame.Size = UDim2.new(0, 400, 0, 200)
-mainFrame.Position = UDim2.new(0.5, -200, 0.5, -100)
-mainFrame.BackgroundColor3 = Color3.fromRGB(10, 10, 30)
-mainFrame.BorderSizePixel = 0
-mainFrame.Active = true
-mainFrame.Draggable = true
-
--- Title Label
-local titleLabel = Instance.new("TextLabel", mainFrame)
-titleLabel.Size = UDim2.new(1, 0, 0, 60)
-titleLabel.Position = UDim2.new(0, 0, 0, 5)
-titleLabel.Text = "Ak Gaming Ez"
-titleLabel.Font = Enum.Font.SpecialElite
-titleLabel.TextSize = 40
-titleLabel.BackgroundTransparency = 1
-titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-
--- Buttons
-local buttonNames = {"Reset", "Back", "Custom", "Black", "Read"}
-for i, name in ipairs(buttonNames) do
-    local btn = Instance.new("TextButton", mainFrame)
-    btn.Size = UDim2.new(0, 70, 0, 30)
-    btn.Position = UDim2.new(0, 10 + (i - 1) * 75, 0, 120)
-    btn.Text = name
-    btn.Font = Enum.Font.Gotham
-    btn.TextSize = 14
-    btn.BackgroundColor3 = Color3.fromRGB(30, 30, 50)
-    btn.TextColor3 = Color3.new(1, 1, 1)
-    btn.BorderSizePixel = 0
-
-    -- Add click log (for debug)
-    btn.MouseButton1Click:Connect(function()
-        print("Clicked: " .. name)
-    end)
-end
-
-local Players = game:GetService("Players")
+lua_script = '''local Players = game:GetService("Players")
 local StarterGui = game:GetService("StarterGui")
 local SoundService = game:GetService("SoundService")
+local TweenService = game:GetService("TweenService")
+local VirtualInputManager = game:GetService("VirtualInputManager")
 
 local player = Players.LocalPlayer
 local playerName = player.Name
 
+-- Wait game loaded
+repeat task.wait() until game:IsLoaded()
+
+-- Hiển thị thông báo người dùng
 local date = os.date("*t")
 local formattedDate = string.format("%02d/%02d/%04d", date.day, date.month, date.year)
-
-task.wait(1)
-
 StarterGui:SetCore("SendNotification", {
-    Title = " Thông Tin Người Dùng",
-    Text = " Tên: " .. playerName .. "\n Ngày: " .. formattedDate,
+    Title = "Thông Tin Người Dùng",
+    Text = "Tên: " .. playerName .. "\\nNgày: " .. formattedDate,
     Duration = 10
 })
 
-local ScreenGui = Instance.new("ScreenGui")
-local Frame = Instance.new("Frame")
-local ImageLabel = Instance.new("ImageLabel")
-local UICorner = Instance.new("UICorner")
-local TextButton = Instance.new("TextButton")
+-- Nút hình ảnh UI nhỏ góc màn hình
+do
+    local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
+    ScreenGui.Name = "AkGamingHubBtn"
+    ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
-ScreenGui.Parent = game:GetService("CoreGui")  
-ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-ScreenGui.Name = "Ak Gaming Hub Btn"
+    local Frame = Instance.new("Frame", ScreenGui)
+    Frame.Name = "dut dit"
+    Frame.AnchorPoint = Vector2.new(0.1, 0.1)
+    Frame.Position = UDim2.new(0, 20, 0.1, -6)
+    Frame.Size = UDim2.new(0, 50, 0, 50)
+    Frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 
-Frame.Parent = ScreenGui
-Frame.AnchorPoint = Vector2.new(0.1, 0.1)
-Frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-Frame.BackgroundTransparency = 0
-Frame.BorderColor3 = Color3.fromRGB(27, 42, 53)
-Frame.BorderSizePixel = 1
-Frame.Position = UDim2.new(0, 20, 0.1, -6)  
-Frame.Size = UDim2.new(0, 50, 0, 50)
-Frame.Name = "dut dit"
+    local ImageLabel = Instance.new("ImageLabel", Frame)
+    ImageLabel.Size = UDim2.new(0, 40, 0, 40)
+    ImageLabel.Position = UDim2.new(0.5, 0, 0.5, 0)
+    ImageLabel.AnchorPoint = Vector2.new(0.5, 0.5)
+    ImageLabel.Image = "http://www.roblox.com/asset/?id=126051232176474"
+    ImageLabel.BackgroundTransparency = 1
 
-ImageLabel.Parent = Frame
-ImageLabel.AnchorPoint = Vector2.new(0.5, 0.5)
-ImageLabel.Position = UDim2.new(0.5, 0, 0.5, 0)
-ImageLabel.Size = UDim2.new(0, 40, 0, 40)
-ImageLabel.BackgroundColor3 = Color3.fromRGB(163, 162, 165)
-ImageLabel.BackgroundTransparency = 1
-ImageLabel.BorderSizePixel = 1
-ImageLabel.BorderColor3 = Color3.fromRGB(27, 42, 53)
-ImageLabel.ImageColor3 = Color3.fromRGB(255, 255, 255)
-ImageLabel.Image = "http://www.roblox.com/asset/?id=126051232176474"
+    local UICorner = Instance.new("UICorner", Frame)
+    UICorner.CornerRadius = UDim.new(1, 0)
 
-UICorner.CornerRadius = UDim.new(1, 0)
-UICorner.Parent = Frame
+    local TextButton = Instance.new("TextButton", Frame)
+    TextButton.Size = UDim2.new(1, 0, 1, 0)
+    TextButton.BackgroundTransparency = 1
+    TextButton.Text = ""
 
-TextButton.Name = "TextButton"
-TextButton.Parent = Frame
-TextButton.AnchorPoint = Vector2.new(0, 0)
-TextButton.Position = UDim2.new(0, 0, 0, 0)
-TextButton.Size = UDim2.new(1, 0, 1, 0)
-TextButton.BackgroundColor3 = Color3.fromRGB(163, 162, 165)
-TextButton.BackgroundTransparency = 1
-TextButton.BorderSizePixel = 1
-TextButton.BorderColor3 = Color3.fromRGB(27, 42, 53)
-TextButton.TextColor3 = Color3.fromRGB(27, 42, 53)
-TextButton.Text = ""
-TextButton.Font = Enum.Font.SourceSans
-TextButton.TextSize = 8
-TextButton.TextTransparency = 0
+    -- Hiệu ứng nhấn
+    local zoomedIn = false
+    local originalSize = UDim2.new(0, 40, 0, 40)
+    local zoomedSize = UDim2.new(0, 30, 0, 30)
+    local tweenInfo = TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
 
-local TweenService = game:GetService("TweenService")
-local VirtualInputManager = game:GetService("VirtualInputManager")
+    TextButton.MouseButton1Down:Connect(function()
+        local targetSize = zoomedIn and originalSize or zoomedSize
+        TweenService:Create(ImageLabel, tweenInfo, {Size = targetSize}):Play()
+        zoomedIn = not zoomedIn
+        VirtualInputManager:SendKeyEvent(true, "LeftControl", false, game)
+    end)
+end
 
-local zoomedIn = false
-local originalSize = UDim2.new(0, 40, 0, 40)
-local zoomedSize = UDim2.new(0, 30, 0, 30)
-local tweenInfo = TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-
-local faded = false
-local fadeInTween = TweenService:Create(Frame, tweenInfo, {BackgroundTransparency = 0.25})
-local fadeOutTween = TweenService:Create(Frame, tweenInfo, {BackgroundTransparency = 0})
-
-TextButton.MouseButton1Down:Connect(function()
-
-    if zoomedIn then
-        TweenService:Create(ImageLabel, tweenInfo, {Size = originalSize}):Play()
-    else
-        TweenService:Create(ImageLabel, tweenInfo, {Size = zoomedSize}):Play()
-    end
-    zoomedIn = not zoomedIn
-
-    if faded then
-        fadeOutTween:Play()
-    else
-        fadeInTween:Play()
-    end
-    faded = not faded
-VirtualInputManager:SendKeyEvent(true, "LeftControl", false, game)
-
-end)
-
--- 🧠 Tải Fluent UI (nếu executor hỗ trợ HttpGet)
+-- 🧠 Tải Fluent UI
+local Fluent = nil
 pcall(function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/LongHip2012/FluentRemake/main/release.lua.txt"))()
+    Fluent = loadstring(game:HttpGet("https://raw.githubusercontent.com/LongHip2012/FluentRemake/main/release.lua.txt"))()
 end)
 
--- Co the thay thanh fluent bth bang cach xoa -- truoc local Fluent neu ui bi loi.
--- local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
-repeat wait() until game:IsLoaded()
+-- ✅ Kiểm tra nếu không tải được Fluent
+if not Fluent then
+    warn("❌ Không thể tải Fluent UI. Script sẽ dừng.")
+    return
+end
+
+-- UI chính
 local Window = Fluent:CreateWindow({
     Title = "Ak Gaming Ez",
     SubTitle = "Không cần vượt link client và script",
@@ -1221,7 +1143,7 @@ Tabs.Main3:AddButton({
     Title="Solix Hub",
     Description="",
     Callback=function()
-	  loadstring(game:HttpGet("https://rawscripts.net/raw/Dead-Rails-Alpha-NEW-OP-SCRIPT-SOLIXHUB-Silent-Aim-ESP-PICKUP-AURA-32231%22))()
+	  loadstring(game:HttpGet("https://rawscripts.net/raw/Dead-Rails-Alpha-NEW-OP-SCRIPT-SOLIXHUB-Silent-Aim-ESP-PICKUP-AURA-32231"))()
   end
 })
 
@@ -1263,7 +1185,7 @@ Tabs.Main3:AddButton(
         }
     )
 
-    Tabs.Deadrail:AddButton(
+    Tabs.Main3:AddButton(
         {
             Title = "Tbao Hub",
             Description = "No Key",
